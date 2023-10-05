@@ -2,3 +2,7 @@ body{
     background-color: black;
     overflow: hidden;
 }
+
+#block1 {
+    display: block;
+}
