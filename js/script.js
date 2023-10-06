@@ -69,7 +69,7 @@ function backGroundAnimation(){
     drawRedBox(xb8, yb8, 500, 380);
     drawRedBox(xb9, yb9, 1750, 480);
     
-    xPosition -= speed;
+    
     xb1 -= speed;
     xb2 -= speed;
     xb3 -= speed;
@@ -79,10 +79,13 @@ function backGroundAnimation(){
     xb7 -= speed;
     xb8 -= speed;
     xb9 -= speed;
+    xBridge1Position-=speed;
+    xBridge2Position-=speed;
     if (xPosition <= -backGroundImage.width) {
         xPosition = 0;
+        xBridge1Position=2515;
+        xBridge2Position=3500;
     }
-    requestAnimationFrame();
     if (!isBridge1Destroyed)
     {
         ctx.drawImage(bridge1, xBridge1Position, 270, bridge.width, bridge.height);
@@ -92,14 +95,8 @@ function backGroundAnimation(){
     {
     ctx.drawImage(bridge2, xBridge2Position, 270, bridge.width, bridge.height);
     }
-
-    xPosition -= speed;
-    xBridge1Position-=speed;
-    xBridge2Position-=speed;
     if (xPosition <= -backGroundImage.width) {
         xPosition = 0;
-        xBridge1Position=2515;
-        xBridge2Position=3500;
     }
 
 }
@@ -108,6 +105,7 @@ function backGroundAnimation(){
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowRight':
+            xPosition -= speed;
             backGroundAnimation();
             break;
             case 'ArrowDown':
@@ -140,7 +138,7 @@ const blastImages = [
 
 let isBridge1Destroyed = false;
 var blastImage1 = new Image();
-var xblastBridge1Position = 2515;
+var xblastBridge1Position = 2620;
 var currentBlastFrame = 0;
 
 // Function to update the bridge destruction animation
@@ -160,7 +158,7 @@ function updateBridge1Destruction() {
         {
             isBridge1Destroyed = true;
         }
-    }, 300);
+    }, 350);
 }
 
 function destroyBridge1() {
@@ -172,12 +170,12 @@ function destroyBridge1() {
 
 let isBridge2Destroyed = false;
 var blastImage2 = new Image();
-var xblastBridge2Position = 3500;
+var xblastBridge2Position = 3600;
 var currentBlastFrame2 = 0;
 
 function updateBridge2Destruction() {
     setInterval(() => {
-        if (currentBlastFrame2 < blastImages.length) {
+        if (currentBlastFrame2 < blastImages.length+1) {
             blastImage2.src = blastImages[currentBlastFrame2];
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -189,7 +187,7 @@ function updateBridge2Destruction() {
         } else {
             isBridge2Destroyed = true;
         }
-    }, 300);
+    }, 350);
 }
 
 function destroyBridge2() {
