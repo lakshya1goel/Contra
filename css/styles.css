@@ -3,6 +3,12 @@ body{
     overflow: hidden;
 }
 
-#block1 {
-    display: block;
+#bridge1, #bridge2 {
+    position: relative;
+    display: none;
 }
+#blast{
+    height: 500px;
+    width: 500px;
+}
+
