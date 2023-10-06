@@ -20,7 +20,10 @@ bridge2.src="./assets/bridge.png";
 var xBridge2Position=3500;
 
 window.onload = function () {
+    // const playerImage = new Image();
+    // playerImage.src = playerImg[0];
     ctx.drawImage(backGroundImage, xPosition, 0, canvas.width, canvas.height);
+    // ctx.drawImage(playerImage, 150, 500, 120, 120);
 };
 
 var speed =100;
@@ -52,12 +55,21 @@ document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowRight':
             backGroundAnimation();
+            currentIndex++;
+            if (currentIndex >= playerImg.length) {
+                currentIndex = 0;
+            }
+            draw();
             break;
             case 'ArrowDown':
             destroyBridge1();
             break;
             case 'ArrowUp':
             destroyBridge2();
+            if (currentJump >= playerJump.length) {
+                currentJump = 0;
+            }
+            jumpDraw();
             break;
     }
 });
@@ -131,4 +143,41 @@ function destroyBridge2() {
         isBridge2Destroyed = true;
         updateBridge2Destruction();
     }
+}
+
+
+//function for player movement
+const playerImg = [
+    "./assets/PR/player1.png",
+    "./assets/PR/player2.png",
+    "./assets/PR/player3.png",
+    "./assets/PR/player4.png",
+    "./assets/PR/player5.png",   
+];
+
+let currentIndex = 0;
+function draw() {
+    const img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, 150, canvas.height-500, 120, 120);
+    };
+    img.src = playerImg[currentIndex];
+}
+
+
+//Function for jumping
+const playerJump = [
+    "./assets/PR/jump1.png",
+    "./assets/PR/jump2.png",
+    "./assets/PR/jump3.png",
+    "./assets/PR/jump4.png",
+];
+
+let currentJump = 0;
+function jumpDraw() {
+    const img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, 150, canvas.height-500, 80, 80);
+    };
+    img.src = playerJump[currentJump];
 }
