@@ -3,27 +3,8 @@ canvas.height=window.innerHeight;
 canvas.width=11374;
 const ctx = canvas.getContext("2d");
 
-var bridge=document.querySelector(".bridge")
-bridge.height=80;
-bridge.width=450;
-
-var backGroundImage=new Image();
-backGroundImage.src="./assets/level1.jpeg";
-var xPosition=0;
-
-var bridge1=new Image();
-bridge1.src="./assets/bridge.png";
-var xBridge1Position=2515;
-
-var bridge2=new Image();
-bridge2.src="./assets/bridge.png";
-var xBridge2Position=3500;
-
 window.onload = function () {
-    // const playerImage = new Image();
-    // playerImage.src = playerImg[0];
     ctx.drawImage(backGroundImage, xPosition, 0, canvas.width, canvas.height);
-    // ctx.drawImage(playerImage, 150, 500, 120, 120);
 };
 
 var speed =100;
@@ -43,22 +24,17 @@ function backGroundAnimation(){
     xPosition -= speed;
     xBridge1Position-=speed;
     xBridge2Position-=speed;
-    if (xPosition <= -backGroundImage.width) {
+    if (xPosition <= -backGroundImage.width+1500) {
         xPosition = 0;
         xBridge1Position=2515;
         xBridge2Position=3500;
     }
 }
 
-//to be removed testing only
 document.addEventListener('keydown', (event) => {
     switch (event.key) {
         case 'ArrowRight':
             backGroundAnimation();
-            currentIndex++;
-            if (currentIndex >= playerImg.length) {
-                currentIndex = 0;
-            }
             draw();
             break;
             case 'ArrowDown':
@@ -66,13 +42,31 @@ document.addEventListener('keydown', (event) => {
             break;
             case 'ArrowUp':
             destroyBridge2();
-            if (currentJump >= playerJump.length) {
-                currentJump = 0;
-            }
             jumpDraw();
             break;
     }
 });
+
+
+
+// ----------------------------------------------------------------------------------------------
+
+var bridge=document.querySelector(".bridge")
+bridge.height=80;
+bridge.width=450;
+
+var backGroundImage=new Image();
+backGroundImage.src="./assets/level1.jpeg";
+var xPosition=0;
+
+var bridge1=new Image();
+bridge1.src="./assets/bridge.png";
+var xBridge1Position=2515;
+
+var bridge2=new Image();
+bridge2.src="./assets/bridge.png";
+var xBridge2Position=3500;
+
 
 const blastImages = [
     "./assets/bridge_blast1.png",
@@ -146,7 +140,9 @@ function destroyBridge2() {
 }
 
 
-//function for player movement
+// -------------------------------------------------------------------------------------------------------------
+
+// player movement
 const playerImg = [
     "./assets/PR/player1.png",
     "./assets/PR/player2.png",
@@ -155,17 +151,7 @@ const playerImg = [
     "./assets/PR/player5.png",   
 ];
 
-let currentIndex = 0;
-function draw() {
-    const img = new Image();
-    img.onload = function() {
-        ctx.drawImage(img, 150, canvas.height-500, 120, 120);
-    };
-    img.src = playerImg[currentIndex];
-}
-
-
-//Function for jumping
+//Playerjump
 const playerJump = [
     "./assets/PR/jump1.png",
     "./assets/PR/jump2.png",
@@ -173,11 +159,42 @@ const playerJump = [
     "./assets/PR/jump4.png",
 ];
 
-let currentJump = 0;
-function jumpDraw() {
-    const img = new Image();
-    img.onload = function() {
-        ctx.drawImage(img, 150, canvas.height-500, 80, 80);
-    };
-    img.src = playerJump[currentJump];
+class PlayerRun {
+    constructor(imagePaths, x, y, width, height) {
+        this.imagePaths = imagePaths;
+        this.currentIndex = 0;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    draw() {
+        const img = new Image();
+        img.onload = () => {
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
+        };
+        img.src = this.imagePaths[this.currentIndex];
+    }
+
+    nextFrame() {
+        this.currentIndex = (this.currentIndex + 1) % this.imagePaths.length;
+    }
 }
+
+const playerRunRight = new PlayerRun(playerImg, 150, canvas.height-500, 120, 120);
+
+const playerJumpUp = new PlayerRun(playerJump, 150, canvas.height-500, 80, 80);
+
+function draw() {
+    playerRunRight.draw();
+    playerRunRight.nextFrame();
+}
+
+function jumpDraw() {
+    playerJumpUp.draw();
+    playerJumpUp.nextFrame();
+}
+
+
+
