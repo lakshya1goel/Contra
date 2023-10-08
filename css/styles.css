@@ -1,12 +1,13 @@
-body{
-    overflow: hidden;
+body {
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    overflow: hidden;
 }
-/* #bridge1, #bridge2 {
-    position: relative;
-    display: none;
+canvas {
+    background-color: #000;
 }
-#blast{
-    height: 500px;
-    width: 500px;
-} */
+
