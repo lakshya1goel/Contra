@@ -1,6 +1,6 @@
-body{
-    overflow: hidden;
-    margin: 0;
+#canvas{
+    display: none;
+    
 }
 /* #bridge1, #bridge2 {
     position: relative;
@@ -10,3 +10,72 @@ body{
     height: 500px;
     width: 500px;
 } */
+.landing-page{
+    position: absolute;
+}
+
+body {
+    background-image: url("../assets/contraMainBackground.jpg");
+    background-size: cover;
+    overflow: hidden;
+    margin: 0;
+    
+}
+.landing-page>div{
+    display: flex;
+    align-items: flex-start;
+}
+header{
+    display: flex;
+    align-items: flex-start;
+    
+}
+header > h1 {
+    color:rgb(105, 105, 245);
+    margin: 2vh;
+    text-align: center;
+    font-size: 4rem;
+    display: inline; 
+}
+
+.siIcon {
+    height: 12vh;
+    float: left;
+}
+.landing-page>.buttons>.button {
+    border: none;
+    color: red;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px; 
+    margin: 4px 20px; 
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+    background-image: linear-gradient(to right, #35155D, #2B2B2B); 
+}
+
+.landing-page>.buttons>.button1 {
+    color: whitesmoke;
+    border: none;
+}
+
+.landing-page>.buttons>.button1:hover {
+    color: whitesmoke;
+    background-image: linear-gradient(to right, #C70039,#F94C10,#F8DE22); 
+}
+
+.landing-page>.buttons>.button2 {
+    color: whitesmoke;
+    border: none;
+}
+
+.landing-page>.buttons>.button2:hover {
+    color: whitesmoke;
+    background-image: linear-gradient(to right, #6b1104, #008CBA); 
+}
+.landing-page>.buttons{
+    margin-left: 15vw;
+}

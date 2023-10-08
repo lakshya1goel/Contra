@@ -1,4 +1,11 @@
-const canvas = document.querySelector("canvas");
+document.querySelector(".landing-page .button1").addEventListener("click", () => {
+    document.getElementById("canvas").style.display = "block";
+    console.log("Click");
+    document.querySelector(".landing-page").style.display = "none";
+});
+
+
+const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
