@@ -1,6 +1,6 @@
 body{
-    background-color: black;
     overflow: hidden;
+    margin: 0;
 }
 #bridge1, #bridge2 {
     position: relative;
@@ -9,4 +9,7 @@ body{
 #blast{
     height: 500px;
     width: 500px;
+}
+    margin: 0;
+    overflow: hidden;
 }
