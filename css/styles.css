@@ -1,4 +1,15 @@
 body{
+    overflow: hidden;
+    margin: 0;
+}
+#bridge1, #bridge2 {
+    position: relative;
+    display: none;
+}
+#blast{
+    height: 500px;
+    width: 500px;
+}
     margin: 0;
     overflow: hidden;
 }

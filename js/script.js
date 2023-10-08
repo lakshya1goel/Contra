@@ -1,4 +1,3 @@
-
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 canvas.height = window.innerHeight;
@@ -45,8 +44,9 @@ class Player {
         this.img = new Image();
         this.img.src = "./assets/PR/player1.png";
     }
+
     draw() {
-        ctx.fillStyle = "red";
+        // ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 
@@ -54,9 +54,9 @@ class Player {
         this.draw();
         this.position.y += this.velocity.y;
         this.position.x += this.velocity.x;
+
         if(this.position.y + this.height + this.velocity.y < canvas.height) this.velocity.y += gravity;
         else this.velocity.y = 0;
-        
     }
 }
 
@@ -254,4 +254,4 @@ function collisionPlatform(px, py, ph, pw, plx, ply, plh, plw, pxv) {
     } else {
         return false;
     }
-}
+})
