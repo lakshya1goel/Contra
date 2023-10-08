@@ -4,6 +4,7 @@ document.querySelector(".landing-page .button1").addEventListener("click", () =>
     document.querySelector(".landing-page").style.display = "none";
 });
 
+
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 canvas.height = 581
@@ -14,11 +15,11 @@ backgroundImage.src = "./assets/level1.jpeg";
 let imageX = 0;
 let imageY = 0;
 let imageWidth = canvas.width;
-let imageHeight = canvas.height + 150;
+let imageHeight = canvas.height+150;
 
 let backgroundX = 0;
 let platformX = 0;
-var speed = 10;
+var speed = 20;
 backgroundImage.onload = () => {
   startGame();
 };
@@ -35,8 +36,8 @@ class Player {
       y: 150,
     };
 
-    this.width = 120;
-    this.height = 120;
+    this.width = 100;
+    this.height = 100;
     this.speed = 10;
 
     this.velocity = {
@@ -44,13 +45,43 @@ class Player {
       y: 0,
     };
 
+    this.currentIndex=0;
+    this.playerImg = [
+        "./assets/PR/player.png",
+        "./assets/PR/player1.png",
+        "./assets/PR/player2.png",
+        "./assets/PR/player3.png",
+        "./assets/PR/player4.png",
+        "./assets/PR/player5.png",
+        "./assets/PR/jump1.png",
+        "./assets/PR/jump2.png",
+        "./assets/PR/jump3.png",
+        "./assets/PR/jump4.png",
+        "./assets/PR/death1.png",
+        "./assets/PR/death2.png",
+        "./assets/PR/death3.png",
+        "./assets/PR/shooting1.png",
+        "./assets/PR/shooting2.png",
+        "./assets/PR/shooting3.png",
+        "./assets/PR/up.png",
+        "./assets/PR/down.png",
+    ];
+
     this.img = new Image();
-    this.img.src = "./assets/PR/player1.png";
+    this.img.src = this.playerImg[this.currentIndex];
+    if(this.position.y + this.height + this.velocity.y  >= canvas.height){
+        console.log("at bottom");
+        this.img.scr=this.player[17];
+    }
+  }
+
+  changeImage() {
+    this.currentIndex = (this.currentIndex + 1) % 6;
+    this.img.src = this.playerImg[this.currentIndex];
   }
 
   draw() {
-    // ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
-    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
   }
 
   update() {
@@ -62,6 +93,7 @@ class Player {
       this.velocity.y += gravity;
     else this.velocity.y = 0;
   }
+
 }
 
 class Platform {
@@ -115,13 +147,41 @@ class Bridge {
     }
 }
 
+class Enemy {
+    constructor(x, y, width, height) {
+        this.position = {
+            x: x,
+            y: y
+        };
+        this.width = width;
+        this.height = height;
+
+        this.currentIndex = 0;
+        this.enemyImg = [
+            "./assets/EL/bag1.png",
+            "./assets/EL/bag2.png",
+            "./assets/EL/bag3.png",
+            "./assets/EL/bag4.png",
+        ];
+        this.img = new Image();
+        this.img.src = this.enemyImg[this.currentIndex];
+    }
+
+    draw() {
+        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    }
+    
+}
+
 const bridges = [
     new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70, 1),
     new Bridge(canvas.width * 2.71, canvas.height * 0.5, 450, 70, 1), 
 ];
 
 
+
 const player = new Player();
+
 const platforms = [
     new Platform(canvas.width * 0.08,canvas.height*0.5,2420, canvas.height * 0.1),
 
@@ -204,79 +264,99 @@ const blastImages = [
     "./assets/bridge_blast7.png"
 ];
 
+const enemy = [
+    new Enemy(
+       canvas.width * 0.8,
+       canvas.height * 0.33,
+       100,
+       100
+    ),
+
+    new Enemy(
+        canvas.width * 1.6,
+        canvas.height * 0.33,
+        100,
+        100
+    )
+];
+
 function animationPlayer() {
+  requestAnimationFrame(animationPlayer);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    requestAnimationFrame(animationPlayer);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(
+    backgroundImage, 
+    imageX, 
+    imageY, 
+    imageWidth, 
+    imageHeight, 
+    0, 
+    0, 
+    canvas.width, 
+    canvas.height 
+  );
 
-    ctx.drawImage(
-        backgroundImage,
-        imageX, 
-        imageY, 
-        imageWidth, 
-        imageHeight, 
-        0, 
-        0,
-        canvas.width, 
-        canvas.height 
-    );
-    
-    player.update();
+  player.update();
+  platforms.forEach((platform) => {
+    platform.draw();
+  });
 
-    platforms.forEach(platform =>{
-        if(collisionPlatform(player.position.x,player.position.y,player.width,player.height,platform.position.x,platform.position.y,platform.width,platform.height,player.velocity.y, player.velocity.x))
-    {
-        player.velocity.y=0;
+  platforms.forEach((platform) => {
+    if (
+      collisionPlatform(
+        player.position.x,
+        player.position.y,
+        player.width,
+        player.height,
+        platform.position.x,
+        platform.position.y,
+        platform.width,
+        platform.height,
+        player.velocity.y
+      )
+    ) {
+      player.velocity.y = 0;
     }
-    })
+  });
 
-    bridges.forEach(bridge => {
-        bridge.draw();
-    });
-
-    platforms.forEach(platform =>{
-        platform.draw();
-    })
+  enemy.forEach((eny) => {
+    eny.draw();
+  });
 }
-document.addEventListener('keydown', (event) => {
-    switch(event.key) {
-        case 'ArrowRight':
-            console.log('right');
-            if(player.position.x <= 500)
-                {
-                    
-                    player.velocity.x += speed;
-                }
-            else
-            {
-                player.velocity.x = 0;
-                platforms.forEach(platform =>{
-                    
-                    platform.position.x -= speed;
-                });
-                bridges.forEach(bridge => {
-                    bridge.position.x-=speed;
-                });
-                imageX += speed;
-            }
-            
-            break;
-        case 'ArrowLeft' :
-            console.log('left');
-            if(player.position.x > 50)
-            {
-                player.velocity.x -= speed;
-            }
-            else
-            {
-            player.velocity.x = 0;
-            }
-            break;
-        case 'ArrowUp':
-            console.log('top');
-            player.velocity.y -= 10;
-            break;
-    }
+document.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "ArrowRight":
+      console.log("right");
+      if (player.position.x <= 500) {
+        player.velocity.x += 2;
+      } else {
+        player.velocity.x = 0;
+        platforms.forEach((platform) => {
+          platform.position.x -= speed;
+        });
+        enemy.forEach((eny) => {
+            eny.position.x -= speed;
+        });
+        imageX += speed;
+      }
+      player.changeImage();
+      break;
+    case "ArrowLeft":
+      console.log("left");
+      if (player.position.x > 50) {
+        player.velocity.x -= 2;
+      } else {
+        player.velocity.x = 0;
+        // platforms.forEach((platform) => {});
+      }
+      break;
+    case "ArrowUp":
+      console.log("top");
+      player.velocity.y -= 10;
+      player.currentIndex=6;
+      player.changeImage();
+      break;
+  }
 });
 
 document.addEventListener("keyup", (event) => {
@@ -294,7 +374,7 @@ document.addEventListener("keyup", (event) => {
       break;
     case "ArrowUp":
       console.log("top");
-      player.velocity.y -= speed;
+      player.velocity.y -= 10;
       break;
   }
 });
@@ -317,3 +397,4 @@ function collisionPlatform(playerX, playerY, playerW, playerH, platformX, platfo
         }
     });
 }
+
