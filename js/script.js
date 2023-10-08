@@ -1,4 +1,3 @@
-
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 canvas.height = 581
@@ -7,57 +6,57 @@ console.log( window.innerHeight);
 const backgroundImage = new Image();
 backgroundImage.src = "./assets/level1.jpeg";
 
-let imageX = 0; 
-let imageY = 0; 
-let imageWidth = canvas.width; 
-let imageHeight = canvas.height+150; 
+let imageX = 0;
+let imageY = 0;
+let imageWidth = canvas.width;
+let imageHeight = canvas.height + 150;
 
 let backgroundX = 0;
-let platformX = 0; 
-var speed=10;
+let platformX = 0;
+var speed = 10;
 backgroundImage.onload = () => {
-
-    startGame();
+  startGame();
 };
 
 function startGame() {
-    
-    animationPlayer();
+  animationPlayer();
 }
 
 const gravity = 1.2;
 class Player {
-    constructor() {
-        this.position = {
-            x : 150,
-            y : 150
-        }
+  constructor() {
+    this.position = {
+      x: 150,
+      y: 150,
+    };
 
-        this.width = 120;
-        this.height = 120;
-        this.speed = 10;
+    this.width = 120;
+    this.height = 120;
+    this.speed = 10;
 
-        this.velocity = {
-            x : 0,
-            y : 0
-        }
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
 
-        this.img = new Image();
-        this.img.src = "./assets/PR/player1.png";
-    }
-    draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
+    this.img = new Image();
+    this.img.src = "./assets/PR/player1.png";
+  }
 
-    update() {
-        this.draw();
-        this.position.y += this.velocity.y;
-        this.position.x += this.velocity.x;
-        if(this.position.y + this.height + this.velocity.y < canvas.height) this.velocity.y += gravity;
-        else this.velocity.y = 0;
-        
-    }
+  draw() {
+    // ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update() {
+    this.draw();
+    this.position.y += this.velocity.y;
+    this.position.x += this.velocity.x;
+
+    if (this.position.y + this.height + this.velocity.y < canvas.height)
+      this.velocity.y += gravity;
+    else this.velocity.y = 0;
+  }
 }
 
 class Platform {
@@ -221,7 +220,7 @@ function animationPlayer() {
     player.update();
 
     platforms.forEach(platform =>{
-        if(collisionPlatform(player.position.x,player.position.y,player.width,player.height,platform.position.x,platform.position.y,platform.width,platform.height,player.velocity.y))
+        if(collisionPlatform(player.position.x,player.position.y,player.width,player.height,platform.position.x,platform.position.y,platform.width,platform.height,player.velocity.y, player.velocity.x))
     {
         player.velocity.y=0;
     }
@@ -234,10 +233,6 @@ function animationPlayer() {
     platforms.forEach(platform =>{
         platform.draw();
     })
-    
-    
-
-    
 }
 document.addEventListener('keydown', (event) => {
     switch(event.key) {
@@ -273,10 +268,6 @@ document.addEventListener('keydown', (event) => {
             player.velocity.x = 0;
             }
             break;
-        // case 'ArrowDown':
-        //     console.log('down');
-        //     player.velocity.y += 10;
-        //     break;
         case 'ArrowUp':
             console.log('top');
             player.velocity.y -= 10;
@@ -284,44 +275,41 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-
-
-document.addEventListener('keyup', (event) => {
-    switch(event.key) {
-        case 'ArrowRight':
-            console.log('right');
-            player.velocity.x = 0;
-            break;
-        case 'ArrowLeft' :
-            console.log('left');
-            player.velocity.x = 0;
-            break;
-        case 'ArrowDown':
-            console.log('down');
-            break;
-        case 'ArrowUp':
-            console.log('top');
-            player.velocity.y -= speed;
-            break;
-    }
-})
+document.addEventListener("keyup", (event) => {
+  switch (event.key) {
+    case "ArrowRight":
+      console.log("right");
+      player.velocity.x = 0;
+      break;
+    case "ArrowLeft":
+      console.log("left");
+      player.velocity.x = 0;
+      break;
+    case "ArrowDown":
+      console.log("down");
+      break;
+    case "ArrowUp":
+      console.log("top");
+      player.velocity.y -= speed;
+      break;
+  }
+});
 
 //collision detection
-function collisionPlatform(px, py, ph, pw, plx, ply, plh, plw, pxv) {
-
-    // Loop through platforms
-    platforms.forEach(platform => {
-        if (px + pw >= platform.position.x && px <= platform.position.x + platform.width && py + ph >= platform.position.y) {
-            player.velocity.y = 0;
-        }
-    });
-
-    // Loop through bridges
-    bridges.forEach(bridge => {
-        if (!bridge.isBlasted && py + ph >= bridge.position.y && pxv >= 0 && px + pw >= bridge.position.x && px <= bridge.position.x + bridge.width) {
+function collisionPlatform(playerX, playerY, playerW, playerH, platformX, platformY, platformW, platformH, playerVelY, playerVelX) {
+  if (playerY + playerH <= platformY && 
+    playerY + playerH + playerVelY >= platformY && 
+    playerX + playerW >= platformX && 
+    playerX <= platformX + platformW) 
+  {
+    return true;
+  } else {
+    return false;
+  }
+  
+  bridges.forEach(bridge => {
+        if (!bridge.isBlasted && playerY + playerH >= bridge.position.y && playerVelX >= 0 && playerX + playerW >= bridge.position.x && playerX <= bridge.position.x + bridge.width) {
             bridge.blast();
         }
     });
-    
-    
 }
