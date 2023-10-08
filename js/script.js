@@ -67,14 +67,13 @@ class Platform {
         };
         this.width = w;
         this.height = h;
-        // this.alpha = 0;
+        this.alpha = 0;
     }
 
     draw() {
-        // ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = "blue";
+        ctx.globalAlpha = this.alpha;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-        // ctx.globalAlpha = 1; 
+        ctx.globalAlpha = 1; 
     }
 }
 
