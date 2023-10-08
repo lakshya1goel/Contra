@@ -1,63 +1,62 @@
-
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
 canvas.height = window.innerHeight;
-canvas.width = 1290;
+canvas.width = window.innerWidth;
 
 const backgroundImage = new Image();
 backgroundImage.src = "./assets/level1.jpeg";
 
-let imageX = 0; 
-let imageY = 0; 
-let imageWidth = canvas.width; 
-let imageHeight = canvas.height+150; 
+let imageX = 0;
+let imageY = 0;
+let imageWidth = canvas.width;
+let imageHeight = canvas.height + 150;
 
 let backgroundX = 0;
-let platformX = 0; 
-var speed=10;
+let platformX = 0;
+var speed = 10;
 backgroundImage.onload = () => {
-
-    startGame();
+  startGame();
 };
 
 function startGame() {
-    
-    animationPlayer();
+  animationPlayer();
 }
 
 const gravity = 1.2;
 class Player {
-    constructor() {
-        this.position = {
-            x : 150,
-            y : 150
-        }
+  constructor() {
+    this.position = {
+      x: 150,
+      y: 150,
+    };
 
-        this.width = 120;
-        this.height = 120;
-        this.speed = 10;
+    this.width = 120;
+    this.height = 120;
+    this.speed = 10;
 
-        this.velocity = {
-            x : 0,
-            y : 0
-        }
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
 
-        this.img = new Image();
-        this.img.src = "./assets/PR/player1.png";
-    }
-    draw() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-    }
+    this.img = new Image();
+    this.img.src = "./assets/PR/player1.png";
+  }
 
-    update() {
-        this.draw();
-        this.position.y += this.velocity.y;
-        this.position.x += this.velocity.x;
-        if(this.position.y + this.height + this.velocity.y < canvas.height) this.velocity.y += gravity;
-        else this.velocity.y = 0;
-        
-    }
+  draw() {
+    // ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update() {
+    this.draw();
+    this.position.y += this.velocity.y;
+    this.position.x += this.velocity.x;
+
+    if (this.position.y + this.height + this.velocity.y < canvas.height)
+      this.velocity.y += gravity;
+    else this.velocity.y = 0;
+  }
 }
 
 class Platform {
@@ -237,9 +236,7 @@ function animationPlayer() {
     {
         player.velocity.y=0;
     }
-    })
-
-    
+  });
 }
 document.addEventListener('keydown', (event) => {
     switch(event.key) {
@@ -275,10 +272,6 @@ document.addEventListener('keydown', (event) => {
             player.velocity.x = 0;
             }
             break;
-        // case 'ArrowDown':
-        //     console.log('down');
-        //     player.velocity.y += 10;
-        //     break;
         case 'ArrowUp':
             console.log('top');
             player.velocity.y -= 10;
@@ -286,40 +279,35 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-
-
-document.addEventListener('keyup', (event) => {
-    switch(event.key) {
-        case 'ArrowRight':
-            console.log('right');
-            player.velocity.x = 0;
-            break;
-        case 'ArrowLeft' :
-            console.log('left');
-            player.velocity.x = 0;
-            break;
-        case 'ArrowDown':
-            console.log('down');
-            break;
-        case 'ArrowUp':
-            console.log('top');
-            player.velocity.y -= speed;
-            break;
-    }
-})
+document.addEventListener("keyup", (event) => {
+  switch (event.key) {
+    case "ArrowRight":
+      console.log("right");
+      player.velocity.x = 0;
+      break;
+    case "ArrowLeft":
+      console.log("left");
+      player.velocity.x = 0;
+      break;
+    case "ArrowDown":
+      console.log("down");
+      break;
+    case "ArrowUp":
+      console.log("top");
+      player.velocity.y -= speed;
+      break;
+  }
+});
 
 //collision detection
-function collisionPlatform(px, py, ph, pw, plx, ply, plh, plw, pxv) {
-    bridges.forEach(bridge => {
-        if (!bridge.isBlasted && !bridge.isDestroyed && py + ph >= bridge.position.y && pxv >= 0 && px + pw >= bridge.position.x && px <= bridge.position.x + bridge.width) {
-            // If there's a collision and the bridge is not blasted or destroyed, initiate the blast
-            bridge.blast();
-        }
-    });
-
-    platforms.forEach(platform => {
-        if (px + pw >= plx && px <= plx + plw && py + ph >= ply) {
-            player.velocity.y = 0;
-        }
-    });
+function collisionPlatform(playerX, playerY, playerW, playerH, platformX, platformY, platformW, platformH, playerVelY) {
+  if (playerY + playerH <= platformY && 
+    playerY + playerH + playerVelY >= platformY && 
+    playerX + playerW >= platformX && 
+    playerX <= platformX + platformW) 
+  {
+    return true;
+  } else {
+    return false;
+  }
 }
