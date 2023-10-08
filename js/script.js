@@ -1,8 +1,13 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+document.querySelector(".landing-page .button1").addEventListener("click", () => {
+    document.getElementById("canvas").style.display = "block";
+    console.log("Click");
+    document.querySelector(".landing-page").style.display = "none";
+});
+
+const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
 canvas.height = 581
 canvas.width = 1290;
-console.log( window.innerHeight);
 const backgroundImage = new Image();
 backgroundImage.src = "./assets/level1.jpeg";
 
