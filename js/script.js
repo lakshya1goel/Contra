@@ -13,11 +13,9 @@ document.querySelector(".landing-page .button1").addEventListener("click", () =>
 
 function showGameOver() {
   const gameOverDiv = document.querySelector(".gameOver");
-  // Remove background image and set background color to black
   document.body.style.backgroundImage = "none";
   document.body.style.backgroundColor = "black";
 
-  // Display the game over screen
   gameOverDiv.style.display = "flex";
   document.querySelector(".gameOver .end").addEventListener("click",()=>{
     window.close();
@@ -180,31 +178,31 @@ class Bridge {
     }
 }
 
-class Enemy {
-    constructor(x, y, width, height) {
-        this.position = {
-            x: x,
-            y: y
-        };
-        this.width = width;
-        this.height = height;
+// class Enemy {
+//     constructor(x, y, width, height) {
+//         this.position = {
+//             x: x,
+//             y: y
+//         };
+//         this.width = width;
+//         this.height = height;
 
-        this.currentIndex = 0;
-        this.enemyImg = [
-            "./assets/EL/bag1.png",
-            "./assets/EL/bag2.png",
-            "./assets/EL/bag3.png",
-            "./assets/EL/bag4.png",
-        ];
-        this.img = new Image();
-        this.img.src = this.enemyImg[this.currentIndex];
-    }
+//         this.currentIndex = 0;
+//         this.enemyImg = [
+//             "./assets/EL/bag1.png",
+//             "./assets/EL/bag2.png",
+//             "./assets/EL/bag3.png",
+//             "./assets/EL/bag4.png",
+//         ];
+//         this.img = new Image();
+//         this.img.src = this.enemyImg[this.currentIndex];
+//     }
 
-    draw() {
-        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
-    }
+//     draw() {
+//         ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+//     }
     
-}
+// }
 
 const bridges = [
     new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70, 1),
@@ -301,21 +299,21 @@ const blastImages = [
     "./assets/bridge_blast7.png"
 ];
 
-const enemy = [
-    new Enemy(
-       canvas.width * 0.8,
-       canvas.height * 0.33,
-       100,
-       100
-    ),
+// const enemy = [
+//     new Enemy(
+//        canvas.width * 0.8,
+//        canvas.height * 0.33,
+//        100,
+//        100
+//     ),
 
-    new Enemy(
-        canvas.width * 1.6,
-        canvas.height * 0.33,
-        100,
-        100
-    )
-];
+//     new Enemy(
+//         canvas.width * 1.6,
+//         canvas.height * 0.33,
+//         100,
+//         100
+//     )
+// ];
 
 var last =canvas.width * 7.88;
 
@@ -363,27 +361,24 @@ function animationPlayer() {
     }
   });
 
-  enemy.forEach((eny) => {
-    eny.draw();
-  });
+//   enemy.forEach((eny) => {
+//     eny.draw();
+//   });
 }
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "ArrowRight":
       console.log("right");
-      if (player.position.x <= 500 ||player.position.x>=last+400 ) {
+      if (player.position.x <= 500) {
         player.velocity.x += 2;
-        
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
-          
         });
-        last-=speed;
-        enemy.forEach((eny) => {
-            eny.position.x -= speed;
-        });
+        // enemy.forEach((eny) => {
+        //     eny.position.x -= speed;
+        // });
         imageX += speed;
       }
       player.changeImage();
