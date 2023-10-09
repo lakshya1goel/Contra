@@ -93,7 +93,7 @@ body > div > div.buttons > a > button:hover {
 }
 
 
-body > div > div:nth-child(2) > img {
+body > div.landing-page > div:nth-child(1) > img {
     animation: scaleInOut 3s infinite;
 }
 body > div > div.buttons > button.button1.button,body > div > div.buttons > a > button {
@@ -105,4 +105,48 @@ body > div > div.buttons > button.button1.button:hover {
 }
 body > div > div.buttons > a > button:hover {
     transform: scale(1.2); 
+}
+.gameOver {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    font-family: 'Press Start 2P', cursive;
+}
+
+.gameOver h1 {
+    font-size: 3vw;
+    color: whitesmoke;
+}
+
+.gameOver h2 {
+    font-size: 3vw;
+    color: whitesmoke;
+}
+
+.gameOver h3 {
+    font-size: 4vw;
+    color: whitesmoke;
+}
+
+body > div.gameOver > div > button{
+    border: none;
+    color: whitesmoke;
+    font-size: 4vw; 
+    margin: 1rem; 
+    background: none;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+}
+
+body > div.gameOver > div > button:hover {
+    text-decoration: none; 
+    background-color: white;
+    color: red;
+    background-color: transparent;
 }
