@@ -59,7 +59,7 @@ function startGame() {
   animationPlayer();
 }
 
-const gravity = 1.2;
+const gravity = 0.7;
 class Player {
   constructor() {
     this.position = {
@@ -158,7 +158,7 @@ class Bridge {
         this.image.src = "./assets/bridge.png";
         this.isBlasted = false;
         this.blastFrame = 0;
-        this.isDestroyed = false; // New property to track if the bridge is destroyed
+        this.isDestroyed = false;
     }
 
     draw() {
@@ -205,8 +205,8 @@ class Bridge {
 // }
 
 const bridges = [
-    new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70, 1),
-    new Bridge(canvas.width * 2.71, canvas.height * 0.5, 450, 70, 1), 
+    new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70),
+    new Bridge(canvas.width * 2.71, canvas.height * 0.5, 450, 70), 
 ];
 
 
@@ -361,9 +361,13 @@ function animationPlayer() {
     }
   });
 
-//   enemy.forEach((eny) => {
-//     eny.draw();
-//   });
+  bridges.forEach((bridge) => {
+    bridge.draw();
+});
+
+  // enemy.forEach((eny) => {
+  //   eny.draw();
+  // });
 }
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
@@ -375,7 +379,9 @@ document.addEventListener("keydown", (event) => {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
+          
         });
+        last-=speed;
         // enemy.forEach((eny) => {
         //     eny.position.x -= speed;
         // });
@@ -422,20 +428,26 @@ document.addEventListener("keyup", (event) => {
 
 //collision detection
 function collisionPlatform(playerX, playerY, playerW, playerH, platformX, platformY, platformW, platformH, playerVelY, playerVelX) {
+
+  
   if (playerY + playerH <= platformY && 
     playerY + playerH + playerVelY >= platformY && 
     playerX + playerW >= platformX && 
     playerX <= platformX + platformW) 
   {
+
+    bridges.forEach(bridge => {
+      if (!bridge.isBlasted && playerY + playerH >= bridge.position.y && playerVelX >= 0 && playerX + playerW >= bridge.position.x && playerX <= bridge.position.x + bridge.width) {
+          bridge.blast();
+      }
+  });
     return true;
   } else {
+    bridges.forEach(bridge => {
+      if (!bridge.isBlasted && playerY + playerH >= bridge.position.y && playerVelX >= 0 && playerX + playerW >= bridge.position.x && playerX <= bridge.position.x + bridge.width) {
+          bridge.blast();
+      }
+  });
     return false;
   }
-  
-  bridges.forEach(bridge => {
-        if (!bridge.isBlasted && playerY + playerH >= bridge.position.y && playerVelX >= 0 && playerX + playerW >= bridge.position.x && playerX <= bridge.position.x + bridge.width) {
-            bridge.blast();
-        }
-    });
 }
-
