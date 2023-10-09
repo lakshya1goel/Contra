@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Support Form</title>
+    <link rel="stylesheet" href="./contact.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <h1>
+        Support Form
+    </h1>
+    <form id="form" action="mailto:akash22164033@akgec.ac.in"  >
+        <div class="form-control">
+            <label for="name" id="label-name">
+                Name
+            </label>
+            <input type="text" id="name" placeholder="Enter your name" />
+        </div>
+        <div class="form-control">
+            <label for="email" id="label-email">
+                Email
+            </label>
+            <input type="email" id="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-control">
+            <label for="age" id="label-age">
+                Age
+            </label>
+            <input type="text" id="age" placeholder="Enter your age" />
+        </div>
+            <div class="form-control">
+                <label>
+                    Would you recommend Contra to a friend?
+                </label>
+                <label for="recommed-1">
+                    <input type="radio" id="recommed-1" name="recommed">Yes</input>
+                </label>
+                <label for="recommed-2">
+                    <input type="radio" id="recommed-2" name="recommed">No</input>
+                </label>
+                <label for="recommed-3">
+                    <input type="radio" id="recommed-3" name="recommed">Maybe</input>
+                </label>
+            </div>
+
+        </div>
+        <div class="form-control">
+            <label for="comment">
+                Any comments or suggestions
+            </label>
+            <textarea name="comment" id="comment" placeholder="Enter your comment here" style="width: 475px; height: 44px;"></textarea>
+        </div>
+
+        <input type="submit"></input>
+        
+    </form>
+</body>
+
+</html>
