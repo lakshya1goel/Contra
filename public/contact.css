@@ -1,0 +1,71 @@
+body {
+    background-image: url("../assets/contraMainBackground.jpg");
+    font-family: 'Press Start 2P', cursive;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-size: 0.8vw;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    font-weight: 300;
+    color: rgb(84, 84, 229);
+}
+
+#form {
+    background-color: aliceblue;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px 20px;
+    box-shadow: 10px 10px 100px rgba(66, 5, 5, 0.5);
+}
+
+.form-control {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-control label {
+    display:block;
+    margin-bottom: 10px;
+}
+
+.form-control input,
+.form-control select,
+.form-control textarea {
+    border: 2px solid red;
+    border-radius: 10px;
+    font-family: inherit;
+    padding: 5px;
+    display:block;
+    width:100%;
+    margin-bottom:10px;
+    resize: none;
+}
+
+.form-control input[type="radio"],
+.form-control input[type="checkbox"] {
+    display: inline-block;
+    width: auto;
+}
+
+#form > input[type=submit]{
+    background-color: #290965;
+    border: 1px solid #777;
+    color: white;
+    border-radius: 360px;
+    font-family: inherit;
+    font-size: 21px;
+    display: block;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    
+}
+a{
+    text-decoration: none;
+}
+#form > input[type=submit]:hover{
+    background-color: red;
+}

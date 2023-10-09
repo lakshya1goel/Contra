@@ -1,8 +1,10 @@
 #canvas{
     display: none;
+    
 }
-canvas {
-    background-color: #000;
+/* #bridge1, #bridge2 {
+    position: relative;
+    display: none;
 }
 #blast{
     height: 500px;
@@ -40,7 +42,7 @@ header > h1 {
     height: 12vh;
     float: left;
 }
-.landing-page>.buttons>.button {
+.landing-page>.buttons>.button,body > div > div.buttons > a > button{
     border: none;
     color: red;
     padding: 16px 32px;
@@ -65,16 +67,42 @@ header > h1 {
     background-image: linear-gradient(to right, #C70039,#F94C10,#F8DE22); 
 }
 
-.landing-page>.buttons>.button2 {
+body > div > div.buttons > a > button {
     color: whitesmoke;
     border: none;
 }
 
-.landing-page>.buttons>.button2:hover {
+body > div > div.buttons > a > button:hover {
     color: whitesmoke;
-    background-image: linear-gradient(to right, #6b1104, #008CBA); 
+    background-image: linear-gradient(to right, #C70039,#F94C10,#F8DE22); 
 }
 .landing-page>.buttons{
     margin-left: 15vw;
 }
 
+@keyframes scaleInOut {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+body > div > div:nth-child(2) > img {
+    animation: scaleInOut 3s infinite;
+}
+body > div > div.buttons > button.button1.button,body > div > div.buttons > a > button {
+    transition: transform 0.3s ease-in-out;
+}
+
+body > div > div.buttons > button.button1.button:hover {
+    transform: scale(1.2); 
+}
+body > div > div.buttons > a > button:hover {
+    transform: scale(1.2); 
+}
