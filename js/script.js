@@ -1,9 +1,28 @@
 document.querySelector(".landing-page .button1").addEventListener("click", () => {
+
     document.getElementById("canvas").style.display = "block";
     console.log("Click");
+
     document.querySelector(".landing-page").style.display = "none";
+
+   var b= document.querySelector("body");
+   b.style.backgroundImage = "../assets/contraMainBackground.jpg"; 
+   b.style.backgroundColor="black";
 });
 
+
+function showGameOver() {
+  const gameOverDiv = document.querySelector(".gameOver");
+  // Remove background image and set background color to black
+  document.body.style.backgroundImage = "none";
+  document.body.style.backgroundColor = "black";
+
+  // Display the game over screen
+  gameOverDiv.style.display = "flex";
+  document.querySelector(".gameOver .end").addEventListener("click",()=>{
+    window.close();
+  })
+}
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -11,6 +30,20 @@ canvas.height = 581
 canvas.width = 1290;
 const backgroundImage = new Image();
 backgroundImage.src = "./assets/level1.jpeg";
+
+const screenWidth = window.innerWidth;
+const screenHeight = window.innerHeight;
+const canvasWidth = canvas.width; 
+const canvasHeight = canvas.height; 
+
+const leftPosition = (screenWidth - canvasWidth) / 2;
+const topPosition = (screenHeight - canvasHeight) / 2;
+
+canvas.style.position = "absolute";
+canvas.style.left = leftPosition + "px";
+canvas.style.top = topPosition + "px";
+
+
 
 let imageX = 0;
 let imageY = 0;
@@ -104,14 +137,14 @@ class Platform {
         };
         this.width = w;
         this.height = h;
-        // this.alpha = 0;
+        this.alpha = 0;
     }
 
     draw() {
-        // ctx.globalAlpha = this.alpha;
+        ctx.globalAlpha = this.alpha;
         ctx.fillStyle = "blue";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-        // ctx.globalAlpha = 1; 
+        ctx.globalAlpha = 1; 
     }
 }
 
@@ -186,6 +219,8 @@ const player = new Player();
 const platforms = [
     new Platform(canvas.width * 0.08,canvas.height*0.5,2420, canvas.height * 0.1),
 
+    new Platform(canvas.width * 0.07,canvas.height*0.98,5800, canvas.height * 0.1),
+
     new Platform(canvas.width * 0.42,canvas.height*0.65,350, canvas.height * 0.1),
 
     new Platform(canvas.width * 0.68,canvas.height*0.8,120, canvas.height * 0.1),
@@ -253,6 +288,8 @@ const platforms = [
 
     new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
 
+    new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
+
 ];
 
 const blastImages = [
@@ -281,10 +318,17 @@ const enemy = [
     )
 ];
 
+var last =canvas.width * 7.88;
+
 function animationPlayer() {
   requestAnimationFrame(animationPlayer);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  
+  if (player.position.x >= last +900) {
+    showGameOver();
+    return; 
+  }
   ctx.drawImage(
     backgroundImage, 
     imageX, 
@@ -328,13 +372,16 @@ document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "ArrowRight":
       console.log("right");
-      if (player.position.x <= 500) {
+      if (player.position.x <= 500 ||player.position.x>=last+400 ) {
         player.velocity.x += 2;
+        
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
+          
         });
+        last-=speed;
         enemy.forEach((eny) => {
             eny.position.x -= speed;
         });
@@ -348,7 +395,6 @@ document.addEventListener("keydown", (event) => {
         player.velocity.x -= 2;
       } else {
         player.velocity.x = 0;
-        // platforms.forEach((platform) => {});
       }
       break;
     case "ArrowUp":
