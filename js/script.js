@@ -13,11 +13,9 @@ document.querySelector(".landing-page .button1").addEventListener("click", () =>
 
 function showGameOver() {
   const gameOverDiv = document.querySelector(".gameOver");
-  // Remove background image and set background color to black
   document.body.style.backgroundImage = "none";
   document.body.style.backgroundColor = "black";
 
-  // Display the game over screen
   gameOverDiv.style.display = "flex";
   document.querySelector(".gameOver .end").addEventListener("click",()=>{
     window.close();
