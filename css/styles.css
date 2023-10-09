@@ -116,8 +116,7 @@ body > div > div.buttons > a > button:hover {
     align-items: center; /* Center horizontally */
     text-align: center;
     background: rgba(0, 0, 0, 0.8);
-    z-index: 2;
-    /* display: none; Remove display: none; to make it initially visible */
+    font-family: 'Press Start 2P', cursive;
 }
 
 .gameOver h1 {
@@ -135,19 +134,19 @@ body > div > div.buttons > a > button:hover {
     color: whitesmoke;
 }
 
-.gameOver button {
+body > div.gameOver > div > button{
     border: none;
     color: whitesmoke;
-    font-size: 1rem; 
+    font-size: 4vw; 
     margin: 1rem; 
     background: none;
     cursor: pointer;
     font-family: 'Press Start 2P', cursive;
 }
 
-.gameOver button:hover {
+body > div.gameOver > div > button:hover {
     text-decoration: none; 
     background-color: white;
-    color: black;
+    color: red;
     background-color: transparent;
 }
