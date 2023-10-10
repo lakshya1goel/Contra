@@ -70,11 +70,14 @@ class Player {
     this.width = 100;
     this.height = 100;
     this.speed = 10;
-
+    this.canShoot = true;
     this.velocity = {
       x: 0,
       y: 0,
     };
+
+
+    this.bullets = [];
 
     this.currentIndex=0;
     this.playerImg = [
@@ -101,8 +104,8 @@ class Player {
     this.img = new Image();
     this.img.src = this.playerImg[this.currentIndex];
     if(this.position.y + this.height + this.velocity.y  >= canvas.height){
-        console.log("at bottom");
-        this.img.scr=this.player[17];
+        this.currentIndex=1;
+        this.img.scr=this.player[this.currentIndex];
     }
   }
 
@@ -125,6 +128,54 @@ class Player {
     else this.velocity.y = 0;
   }
 
+  shoot() {
+    
+    if (this.canShoot) {
+      const bulletX = this.position.x + this.width;
+      const bulletY = this.position.y + this.height / 2;
+      const bulletSpeed = 5;
+      const newBullet = new Bullet(bulletX, bulletY, bulletSpeed);
+      this.bullets.push(newBullet);
+
+      this.canShoot = false;
+    }
+  }
+
+  updateBullets() {
+    this.bullets.forEach((bullet, index) => {
+      bullet.update();
+      bullet.draw();
+
+      if (bullet.position.x > canvas.width) {
+        this.bullets.splice(index, 1);
+      }
+    });
+  }
+}
+class Bullet {
+  constructor(x, y, velocityX) {
+    this.position = {
+      x: x,
+      y: y,
+    };
+    this.width = 10; 
+    this.height = 10;
+    this.img = new Image();
+    this.img.src = "./assets/bullet1.png";
+    this.velocity = {
+      x: velocityX,
+      y: 0, 
+    };
+  }
+
+  update() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
+
+  draw() {
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+  }
 }
 
 class Platform {
@@ -289,17 +340,6 @@ const platforms = [
     new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
 
 ];
-
-const blastImages = [
-    "./assets/bridge_blast1.png",
-    "./assets/bridge_blast2.png",
-    "./assets/bridge_blast3.png",
-    "./assets/bridge_blast4.png",
-    "./assets/bridge_blast5.png",
-    "./assets/bridge_blast6.png",
-    "./assets/bridge_blast7.png"
-];
-
 // const enemy = [
 //     new Enemy(
 //        canvas.width * 0.8,
@@ -340,6 +380,9 @@ function animationPlayer() {
   );
 
   player.update();
+
+  player.updateBullets();
+
   platforms.forEach((platform) => {
     platform.draw();
   });
@@ -361,18 +404,17 @@ function animationPlayer() {
       player.velocity.y = 0;
     }
   });
-
-
-  bridges.forEach((bridge) => {
-    bridge.draw();
-});
-
   // enemy.forEach((eny) => {
   //   eny.draw();
   // });
 }
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
+    case "f":
+      console.log("shooting");
+      player.shoot(); 
+    break;
+
     case "ArrowRight":
       console.log("right");
       if (player.position.x <= 500 ||player.position.x>=last+400 ) {
@@ -409,6 +451,8 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+
+
 document.addEventListener("keyup", (event) => {
   switch (event.key) {
     case "ArrowRight":
@@ -425,6 +469,10 @@ document.addEventListener("keyup", (event) => {
     case "ArrowUp":
       console.log("top");
       player.velocity.y -= 10;
+      break;
+      
+      case "f":
+        player.canShoot = true;
       break;
   }
 });
