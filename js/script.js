@@ -223,7 +223,6 @@ class Platform {
    
     draw() {
         ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = "blue";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         ctx.globalAlpha = 1; 
     }
@@ -438,6 +437,11 @@ function animationPlayer() {
       player.velocity.y = 0;
     }
   });
+
+  bridges.forEach((bridge) => {
+    bridge.draw();
+});
+
   // enemy.forEach((eny) => {
   //   eny.draw();
   // });
@@ -448,9 +452,8 @@ document.addEventListener("keydown", (event) => {
     
     case "ArrowRight":
       console.log("right");
-      if (player.position.x <= 500 ||player.position.x>=last+400 ) {
+      if (player.position.x <= 500) {
         player.velocity.x += 2;
-        
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
