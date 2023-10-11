@@ -50,7 +50,7 @@ let imageHeight = canvas.height+150;
 
 let backgroundX = 0;
 let platformX = 0;
-var speed = 20;
+var speed = 5;
 backgroundImage.onload = () => {
   startGame();
 };
@@ -67,9 +67,16 @@ class Player {
       y: 150,
     };
 
+    this.bulletDirection = {
+      up: false,
+      down: false,
+      left: false,
+      right: false,
+    };
+
     this.width = 100;
     this.height = 100;
-    this.speed = 10;
+    this.speed = 5;
     this.canShoot = true;
     this.velocity = {
       x: 0,
@@ -128,17 +135,42 @@ class Player {
     else this.velocity.y = 0;
   }
 
-  shoot() {
-    
-    if (this.canShoot) {
-      const bulletX = this.position.x + this.width;
-      const bulletY = this.position.y + this.height / 2;
-      const bulletSpeed = 5;
-      const newBullet = new Bullet(bulletX, bulletY, bulletSpeed);
-      this.bullets.push(newBullet);
 
-      this.canShoot = false;
+  setBulletDirection(direction, value) {
+    this.bulletDirection[direction] = value;
+  }
+
+  shoot() {
+   
+    if (!this.canShoot) {
+      return; 
     }
+    const bulletSpeed = 5;
+    const bulletVelocity = {
+      x: 0,
+      y: 0,
+    };
+
+    if (this.bulletDirection.up) {
+      bulletVelocity.y = -bulletSpeed;
+    } else if (this.bulletDirection.down) {
+      bulletVelocity.y = bulletSpeed;
+    }
+
+    if (this.bulletDirection.left) {
+      bulletVelocity.x = -bulletSpeed;
+    } else if (this.bulletDirection.right) {
+      bulletVelocity.x = bulletSpeed;
+    }
+
+
+    let bulletX = this.position.x + this.width;
+    let bulletY = this.position.y + this.height / 2;
+
+    const newBullet = new Bullet(bulletX, bulletY, bulletVelocity);
+    this.bullets.push(newBullet);
+
+    this.canShoot = false;
   }
 
   updateBullets() {
@@ -162,10 +194,8 @@ class Bullet {
     this.height = 10;
     this.img = new Image();
     this.img.src = "./assets/bullet1.png";
-    this.velocity = {
-      x: velocityX,
-      y: 0, 
-    };
+    // 
+    this.velocity = velocityX; 
   }
 
   update() {
@@ -187,8 +217,10 @@ class Platform {
         this.width = w;
         this.height = h;
         this.alpha = 0;
+        this.enemies=[];
     }
 
+   
     draw() {
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = "blue";
@@ -230,31 +262,34 @@ class Bridge {
     }
 }
 
-// class Enemy {
-//     constructor(x, y, width, height) {
-//         this.position = {
-//             x: x,
-//             y: y
-//         };
-//         this.width = width;
-//         this.height = height;
+class Enemy {
+    constructor(x, y, width, height,max,min,velocityX) {
+        this.position = {
+            x: x,
+            y: y
+        };
+        this.width = width;
+        this.height = height;
+        this.max=max;
+        this.min=min;
+        this.velocityX=velocityX;
+        this.direction=1;
+        this.currentIndex = 0;
+        this.enemyImg = [
+            "./assets/EL/bag1.png",
+            "./assets/EL/bag2.png",
+            "./assets/EL/bag3.png",
+            "./assets/EL/bag4.png",
+        ];
+        this.img = new Image();
+        this.img.src = this.enemyImg[this.currentIndex];
+    }
 
-//         this.currentIndex = 0;
-//         this.enemyImg = [
-//             "./assets/EL/bag1.png",
-//             "./assets/EL/bag2.png",
-//             "./assets/EL/bag3.png",
-//             "./assets/EL/bag4.png",
-//         ];
-//         this.img = new Image();
-//         this.img.src = this.enemyImg[this.currentIndex];
-//     }
-
-//     draw() {
-//         ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
-//     }
+    draw() {
+        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    }
     
-// }
+}
 
 const bridges = [
     new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70),
@@ -362,8 +397,7 @@ function animationPlayer() {
   requestAnimationFrame(animationPlayer);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  
-  if (player.position.x >= last +900) {
+  if (player.position.x >= last +800) {
     showGameOver();
     return; 
   }
@@ -408,13 +442,10 @@ function animationPlayer() {
   //   eny.draw();
   // });
 }
+var count=1;
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
-    case "f":
-      console.log("shooting");
-      player.shoot(); 
-    break;
-
+    
     case "ArrowRight":
       console.log("right");
       if (player.position.x <= 500 ||player.position.x>=last+400 ) {
@@ -424,7 +455,7 @@ document.addEventListener("keydown", (event) => {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
-          
+          // player.this.img.src="./assets/PR/player.png"
         });
         last-=speed;
         // enemy.forEach((eny) => {
@@ -444,9 +475,39 @@ document.addEventListener("keydown", (event) => {
       break;
     case "ArrowUp":
       console.log("top");
+      if(count<=2)
+      {
+
+        count++;
       player.velocity.y -= 10;
       player.currentIndex=6;
       player.changeImage();
+      }
+      else
+      count=1;
+      
+      break;
+
+      case "w":
+        console.log("w");
+       
+      player.setBulletDirection("up", true);
+      player.shoot(); 
+      break;
+    case "s":
+      
+      player.setBulletDirection("down", true);
+      player.shoot(); 
+      break;
+    case "a":
+      
+      player.setBulletDirection("left", true);
+      player.shoot(); 
+      break;
+    case "d":
+      
+      player.setBulletDirection("right", true);
+      player.shoot(); 
       break;
   }
 });
@@ -471,8 +532,26 @@ document.addEventListener("keyup", (event) => {
       player.velocity.y -= 10;
       break;
       
-      case "f":
-        player.canShoot = true;
+      case "w":
+        console.log("w");
+        
+      player.setBulletDirection("up", false);
+      player.canShoot = true;
+      break;
+    case "s":
+      
+      player.setBulletDirection("down", false);
+      player.canShoot = true;
+      break;
+    case "a":
+      
+      player.setBulletDirection("left", false);
+      player.canShoot = true;
+      break;
+    case "d":
+      
+      player.setBulletDirection("right", false);
+      player.canShoot = true;
       break;
   }
 });
