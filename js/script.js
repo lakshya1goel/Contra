@@ -50,7 +50,7 @@ let imageHeight = canvas.height+150;
 
 let backgroundX = 0;
 let platformX = 0;
-var speed = 20;
+var speed = 5;
 backgroundImage.onload = () => {
   startGame();
 };
@@ -67,14 +67,24 @@ class Player {
       y: 150,
     };
 
+    this.bulletDirection = {
+      up: false,
+      down: false,
+      left: false,
+      right: false,
+    };
+
     this.width = 100;
     this.height = 100;
-    this.speed = 10;
-
+    this.speed = 5;
+    this.canShoot = true;
     this.velocity = {
       x: 0,
       y: 0,
     };
+
+
+    this.bullets = [];
 
     this.currentIndex=0;
     this.playerImg = [
@@ -101,8 +111,8 @@ class Player {
     this.img = new Image();
     this.img.src = this.playerImg[this.currentIndex];
     if(this.position.y + this.height + this.velocity.y  >= canvas.height){
-        console.log("at bottom");
-        this.img.scr=this.player[17];
+        this.currentIndex=1;
+        this.img.scr=this.player[this.currentIndex];
     }
   }
 
@@ -125,6 +135,77 @@ class Player {
     else this.velocity.y = 0;
   }
 
+
+  setBulletDirection(direction, value) {
+    this.bulletDirection[direction] = value;
+  }
+
+  shoot() {
+   
+    if (!this.canShoot) {
+      return; 
+    }
+    const bulletSpeed = 5;
+    const bulletVelocity = {
+      x: 0,
+      y: 0,
+    };
+
+    if (this.bulletDirection.up) {
+      bulletVelocity.y = -bulletSpeed;
+    } else if (this.bulletDirection.down) {
+      bulletVelocity.y = bulletSpeed;
+    }
+
+    if (this.bulletDirection.left) {
+      bulletVelocity.x = -bulletSpeed;
+    } else if (this.bulletDirection.right) {
+      bulletVelocity.x = bulletSpeed;
+    }
+
+
+    let bulletX = this.position.x + this.width;
+    let bulletY = this.position.y + this.height / 2;
+
+    const newBullet = new Bullet(bulletX, bulletY, bulletVelocity);
+    this.bullets.push(newBullet);
+
+    this.canShoot = false;
+  }
+
+  updateBullets() {
+    this.bullets.forEach((bullet, index) => {
+      bullet.update();
+      bullet.draw();
+
+      if (bullet.position.x > canvas.width) {
+        this.bullets.splice(index, 1);
+      }
+    });
+  }
+}
+class Bullet {
+  constructor(x, y, velocityX) {
+    this.position = {
+      x: x,
+      y: y,
+    };
+    this.width = 10; 
+    this.height = 10;
+    this.img = new Image();
+    this.img.src = "./assets/bullet1.png";
+    // 
+    this.velocity = velocityX; 
+  }
+
+  update() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
+
+  draw() {
+    ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+  }
 }
 
 class Platform {
@@ -136,8 +217,10 @@ class Platform {
         this.width = w;
         this.height = h;
         this.alpha = 0;
+        this.enemies=[];
     }
 
+   
     draw() {
         ctx.globalAlpha = this.alpha;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
@@ -178,31 +261,34 @@ class Bridge {
     }
 }
 
-// class Enemy {
-//     constructor(x, y, width, height) {
-//         this.position = {
-//             x: x,
-//             y: y
-//         };
-//         this.width = width;
-//         this.height = height;
+class Enemy {
+    constructor(x, y, width, height,max,min,velocityX) {
+        this.position = {
+            x: x,
+            y: y
+        };
+        this.width = width;
+        this.height = height;
+        this.max=max;
+        this.min=min;
+        this.velocityX=velocityX;
+        this.direction=1;
+        this.currentIndex = 0;
+        this.enemyImg = [
+            "./assets/EL/bag1.png",
+            "./assets/EL/bag2.png",
+            "./assets/EL/bag3.png",
+            "./assets/EL/bag4.png",
+        ];
+        this.img = new Image();
+        this.img.src = this.enemyImg[this.currentIndex];
+    }
 
-//         this.currentIndex = 0;
-//         this.enemyImg = [
-//             "./assets/EL/bag1.png",
-//             "./assets/EL/bag2.png",
-//             "./assets/EL/bag3.png",
-//             "./assets/EL/bag4.png",
-//         ];
-//         this.img = new Image();
-//         this.img.src = this.enemyImg[this.currentIndex];
-//     }
-
-//     draw() {
-//         ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
-//     }
+    draw() {
+        ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    }
     
-// }
+}
 
 const bridges = [
     new Bridge(canvas.width * 1.95, canvas.height * 0.5, 450, 70),
@@ -288,17 +374,6 @@ const platforms = [
     new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
 
 ];
-
-const blastImages = [
-    "./assets/bridge_blast1.png",
-    "./assets/bridge_blast2.png",
-    "./assets/bridge_blast3.png",
-    "./assets/bridge_blast4.png",
-    "./assets/bridge_blast5.png",
-    "./assets/bridge_blast6.png",
-    "./assets/bridge_blast7.png"
-];
-
 // const enemy = [
 //     new Enemy(
 //        canvas.width * 0.8,
@@ -321,8 +396,7 @@ function animationPlayer() {
   requestAnimationFrame(animationPlayer);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  
-  if (player.position.x >= last +900) {
+  if (player.position.x >= last +800) {
     showGameOver();
     return; 
   }
@@ -339,6 +413,9 @@ function animationPlayer() {
   );
 
   player.update();
+
+  player.updateBullets();
+
   platforms.forEach((platform) => {
     platform.draw();
   });
@@ -369,8 +446,10 @@ function animationPlayer() {
   //   eny.draw();
   // });
 }
+var count=1;
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
+    
     case "ArrowRight":
       console.log("right");
       if (player.position.x <= 500) {
@@ -379,7 +458,7 @@ document.addEventListener("keydown", (event) => {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
-          
+          // player.this.img.src="./assets/PR/player.png"
         });
         last-=speed;
         // enemy.forEach((eny) => {
@@ -399,12 +478,44 @@ document.addEventListener("keydown", (event) => {
       break;
     case "ArrowUp":
       console.log("top");
+      if(count<=2)
+      {
+
+        count++;
       player.velocity.y -= 10;
       player.currentIndex=6;
       player.changeImage();
+      }
+      else
+      count=1;
+      
+      break;
+
+      case "w":
+        console.log("w");
+       
+      player.setBulletDirection("up", true);
+      player.shoot(); 
+      break;
+    case "s":
+      
+      player.setBulletDirection("down", true);
+      player.shoot(); 
+      break;
+    case "a":
+      
+      player.setBulletDirection("left", true);
+      player.shoot(); 
+      break;
+    case "d":
+      
+      player.setBulletDirection("right", true);
+      player.shoot(); 
       break;
   }
 });
+
+
 
 document.addEventListener("keyup", (event) => {
   switch (event.key) {
@@ -422,6 +533,28 @@ document.addEventListener("keyup", (event) => {
     case "ArrowUp":
       console.log("top");
       player.velocity.y -= 10;
+      break;
+      
+      case "w":
+        console.log("w");
+        
+      player.setBulletDirection("up", false);
+      player.canShoot = true;
+      break;
+    case "s":
+      
+      player.setBulletDirection("down", false);
+      player.canShoot = true;
+      break;
+    case "a":
+      
+      player.setBulletDirection("left", false);
+      player.canShoot = true;
+      break;
+    case "d":
+      
+      player.setBulletDirection("right", false);
+      player.canShoot = true;
       break;
   }
 });
