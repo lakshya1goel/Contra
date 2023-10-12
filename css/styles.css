@@ -17,6 +17,7 @@
 body {
     background-image: url("../assets/contraMainBackground.jpg");
     background-size: cover;
+    background-repeat: no-repeat;
     overflow: hidden;
     margin: 0;
     
