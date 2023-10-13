@@ -68,10 +68,36 @@ backgroundImage.onload = () => {
 
 function startGame() {
   animationPlayer();
+  gameLoop();
+}
+const enemies = [];
+function createEnemy() {
+  const x = canvas.width; 
+  const y = Math.random() * (canvas.height - 100);
+  const enemy = new Enemy(x, y, 100, 100);
+  enemies.push(enemy);
+}
+
+function gameLoop() {
+
+  for (let i = 0; i < enemies.length; i++) {
+    enemies[i].update(ctx);
+    if (enemies[i].position.x + enemies[i].width < 0) 
+    {
+      enemies.splice(i, 1);
+    }
+
+  }
+  for (let i = 0; i < enemies.length; i++) {
+    enemies[i].changeImage();
+  }
+  if (Math.random() < 0.02) {
+    createEnemy();
+  }
+  requestAnimationFrame(gameLoop);
 }
 
 const gravity = 0.7;
-
 const platforms = [
   new Platform(
     canvas.width * 0.08,
@@ -430,11 +456,6 @@ var last = canvas.width * 7.88;
 function animationPlayer() {
   requestAnimationFrame(animationPlayer);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (player.position.x >= last + 800) {
-    showGameOver();
-    return;
-  }
   ctx.drawImage(
     backgroundImage,
     imageX,
@@ -450,12 +471,14 @@ function animationPlayer() {
   player.update(ctx);
 
   player.updateBullets();
+  if (player.position.x >= last +800) {
+    showGameOver();
+    return; 
+  }
 
   platforms.forEach((platform) => {
     platform.draw(ctx);
     // platform.updateEnemies(ctx);
-
-    platform.enemyAttack();
   });
 
   platforms.forEach((platform) => {
@@ -474,7 +497,6 @@ function animationPlayer() {
     ) {
       player.velocity.y = 0;
     }
-    platform.updateEnemies(ctx);
   });
 
   bridges.forEach((bridge) => {
@@ -492,13 +514,16 @@ document.addEventListener("keydown", (event) => {
       console.log("right");
       if (player.position.x <= 500) {
         player.velocity.x = 2;
-      } else {
+        } 
+        else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
-          platform.enemyX -= speed + 2;
         });
-        last -= speed;
+        enemies.forEach((enemy)=>{
+          enemy.position.speed=11;
+        })
+        last-=speed;
         imageX += speed;
       }
       player.changeImage();

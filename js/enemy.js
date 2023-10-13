@@ -24,23 +24,29 @@ export default class Enemy {
     this.currentIndex = (this.currentIndex + 1) % 2;
     this.img.src = this.EnemyImg[this.currentIndex];
   }
+  
+      changeImage() {
+        if(this.currentIndex%10==0)
+        {
+          console.log("hi 1"+this.currentIndex);
+          this.img.src = this.EnemyImg[(this.currentIndex %2)];
+        
+        }
+        console.log("hi2"+this.currentIndex);
+        this.currentIndex = (this.currentIndex + 1) ;
+        
+      }
 
-  draw(ctx) {
-    if (ctx) {
-      ctx.drawImage(
-        this.img,
-        this.position.x,
-        this.position.y,
-        this.width,
-        this.height
-      );
-    }
-  }
-  update(ctx) {
-    if (ctx) {
-      this.changeImage();
-      this.draw(ctx);
-      this.position.x -= this.speed;
-    }
-  }
+      draw(ctx) {
+        if (ctx) {
+          ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+        }
+      }
+      update(ctx) {
+        if (ctx) {
+          this.changeImage();
+          this.draw(ctx);
+          this.position.x -= this.speed;
+        }
+      }
 }
