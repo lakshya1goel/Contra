@@ -33,7 +33,7 @@ export default class Player {
     };
 
     this.bullets = [];
-
+    this.live=5;
     this.currentIndex = 0;
     this.playerImg = [
       "./assets/PR/player.png",
@@ -81,7 +81,6 @@ export default class Player {
       "./assets/PL/jump3.png",
       "./assets/PL/jump4.png",
     ];
-
     this.img = new Image();
     this.img.src = this.playerImg[this.currentIndex];
 
@@ -193,6 +192,7 @@ export default class Player {
   }
   hitEnemy(enemy) {
     this.enemiesHit.add(enemy.id);
+    this.live=5-this.enemiesHit.size;
     if (this.enemiesHit.size >= 5) 
     {
       this.isDead = true;

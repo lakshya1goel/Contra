@@ -3,6 +3,31 @@ import Platform from "./platform.js";
 import Enemy from "./enemy.js";
 
 let gameStarted=false;
+const gameSound = new Audio("./sounds/starting.ogv");
+gameSound.loop = true;
+const bulletShoot=new Audio("./sounds/Shoot.wav");
+const jump=new Audio("./sounds/Jump.wav");
+const dash=new Audio("./sounds/Dash.wav");
+const hit=new Audio("./sounds/Hit.wav");
+const exp=new Audio("./sounds/Explosion.wav");
+
+
+function drawHealthBar() {
+  const barWidth = 200; 
+  const barHeight = 20; 
+  const x = 10; 
+  const y = 10; 
+  const currentHealthWidth = (player.live / 5) * barWidth;
+
+  ctx.fillStyle = "red"; 
+  ctx.fillRect(x, y, barWidth, barHeight);
+
+  ctx.fillStyle = "green"; 
+  ctx.fillRect(x, y, currentHealthWidth, barHeight);
+}
+
+
+var score=0;
 
 document
   .querySelector(".landing-page .button1")
@@ -14,7 +39,7 @@ document
     var b = document.querySelector("body");
     b.style.backgroundImage = "url(./assets/contraMainBackground.jpg)";
     b.style.backgroundColor = "black";
-
+    gameSound.play();
     gameStarted=true;
   });
 
@@ -32,7 +57,8 @@ function showGameOver() {
   const gameOverDiv = document.querySelector(".gameOver");
   document.body.style.backgroundImage = "none";
   document.body.style.backgroundColor = "black";
-
+  gameSound.pause();
+document.querySelector(".gameOver>.playerScore").innerHTML="P1\t\t "+score;
   gameOverDiv.style.display = "flex";
   document.querySelector(".gameOver .end").addEventListener("click", () => {
     window.close();
@@ -93,6 +119,7 @@ function gameLoop() {
         player.position.y < enemies[i].position.y + enemies[i].height &&
         player.position.y + player.height > enemies[i].position.y
       ) {
+        hit.play();
         player.hitEnemy(enemies[i]);
         if (player.isDead) {
           showGameOver();
@@ -119,6 +146,8 @@ function gameLoop() {
           bullet.position.y < enemy.position.y + enemy.height &&
           bullet.position.y + bullet.height > enemy.position.y
         ) {
+          exp.play();
+          score+=20;
           player.bullets.splice(i, 1);
           enemies.splice(j, 1);
           i--;
@@ -552,8 +581,8 @@ function animationPlayer() {
   bridges.forEach((bridge) => {
     bridge.draw();
   });
+  drawHealthBar();
 }
-
 
 // var count = 1;
 let isJumping = false;
@@ -562,6 +591,7 @@ document.addEventListener("keydown", (event) => {
 
     case "ArrowRight":
       console.log("right");
+      dash.play();
       if (player.position.x <= 500) {
         player.velocity.x = 2;
         } 
@@ -599,7 +629,9 @@ document.addEventListener("keydown", (event) => {
       //   // player.changeImageRightUp();
       // } else count = 1;
 
+      jump.play();
       if (!isJumping) { 
+        
         console.log("top");
         isJumping = true;
         player.velocity.y -= 2;
@@ -609,18 +641,25 @@ document.addEventListener("keydown", (event) => {
 
     case "w":
       console.log("w");
+bulletShoot.play();
       player.setBulletDirection("up", true);
       player.shoot();
       break;
     case "s":
+bulletShoot.play();
+
       player.setBulletDirection("down", true);
       player.shoot();
       break;
     case "a":
+bulletShoot.play();
+
       player.setBulletDirection("left", true);
       player.shoot();
       break;
     case "d":
+bulletShoot.play();
+
       player.setBulletDirection("right", true);
       player.shoot();
       break;
@@ -631,6 +670,7 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
   switch (event.key) {
     case "ArrowRight":
+      dash.pause();
       console.log("right");
       player.velocity.x = 0;
       break;
@@ -666,6 +706,8 @@ document.addEventListener("keyup", (event) => {
       break;
   }
 });
+
+
 
 //collision detection
 function collisionPlatform(
