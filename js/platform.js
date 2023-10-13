@@ -1,5 +1,5 @@
-import Enemy from "./enemy.js"
-let count=0;
+import Enemy from "./enemy.js";
+let count = 0;
 let cnt = 1;
 export default class Platform {
     constructor(a, b, w, h,c) {
