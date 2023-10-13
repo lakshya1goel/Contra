@@ -52,10 +52,6 @@ export default class Player {
   
       this.img = new Image();
       this.img.src = this.playerImg[this.currentIndex];
-      // if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-      //   this.currentIndex = 1;
-      //   this.img.scr = this.player[this.currentIndex];
-      // }
     }
   
     changeImage() {
