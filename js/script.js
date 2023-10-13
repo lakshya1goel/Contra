@@ -481,9 +481,13 @@ function animationPlayer() {
     bridge.draw();
   });
 }
-var count = 1;
+
+
+// var count = 1;
+let isJumping = false;
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
+
     case "ArrowRight":
       console.log("right");
       if (player.position.x <= 500) {
@@ -499,6 +503,7 @@ document.addEventListener("keydown", (event) => {
       }
       player.changeImage();
       break;
+
     case "ArrowLeft":
       console.log("left");
       if (player.position.x > 50) {
@@ -508,14 +513,23 @@ document.addEventListener("keydown", (event) => {
       }
       player.changeImageLeft();
       break;
+      
     case "ArrowUp":
       console.log("top");
-      if (count <= 2) {
-        count++;
-        player.velocity.y -= 10;
+      // if (count <= 2) {
+      //   count++;
+      //   player.velocity.y -= 10;
+      //   player.currentIndex = 6;
+      //   // player.changeImage();
+      //   // player.changeImageRightUp();
+      // } else count = 1;
+
+      if (!isJumping) { 
+        console.log("top");
+        isJumping = true;
+        player.velocity.y -= 15;
         player.currentIndex = 6;
-        player.changeImage();
-      } else count = 1;
+      }
       break;
 
     case "w":
@@ -538,6 +552,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+
 document.addEventListener("keyup", (event) => {
   switch (event.key) {
     case "ArrowRight":
@@ -553,6 +568,7 @@ document.addEventListener("keyup", (event) => {
       break;
     case "ArrowUp":
       console.log("top");
+      isJumping = true;
       player.velocity.y -= 10;
       break;
 
