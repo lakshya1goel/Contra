@@ -7,7 +7,13 @@ export default class Player {
     this.position = {
       x: 150,
       y: 150,
+      
     };
+
+    this.diedImg = new Image();
+    this.diedImg.src = "./assets/PR/death2.png";
+
+    this.isDead = false;
 
     this.bulletDirection = {
       up: false,
@@ -15,6 +21,7 @@ export default class Player {
       left: false,
       right: false,
     };
+    this.enemiesHit = new Set();
     this.ctx = ctx;
     this.width = 100;
     this.height = 100;
@@ -93,7 +100,7 @@ export default class Player {
   }
 
   changeImageLeft() {
-    if (this.currentIndexLeft % 2 == 0) {
+    if (this.currentIndexLeft % 10 == 0) {
       this.img.src = this.playerImgLeft[this.currentIndexLeft % 6];
     }
     this.currentIndexLeft = this.currentIndexLeft + 1;
@@ -107,13 +114,12 @@ export default class Player {
   // }
 
   draw(ctx) {
-    ctx.drawImage(
-      this.img,
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
+    if (this.isDead) {
+      ctx.drawImage(this.diedImg, this.position.x, this.position.y+50, 100, 50);
+    } 
+    else {
+      ctx.drawImage(this.img, this.position.x, this.position.y, this.width, this.height);
+    }
   }
 
   update(ctx) {
@@ -161,14 +167,35 @@ export default class Player {
     this.canShoot = false;
   }
 
-  updateBullets() {
-    this.bullets.forEach((bullet, index) => {
+  updateBullets(enemies) {
+    this.bullets.forEach((bullet, bulletIndex) => {
       bullet.update();
       bullet.draw(this.ctx);
 
-      if (bullet.position.x > canvas.width) {
-        this.bullets.splice(index, 1);
+      // Check for collisions with enemies
+      for (let enemyIndex = 0; enemyIndex < enemies.length; enemyIndex++) {
+        const enemy = enemies[enemyIndex];
+
+        if (
+          bullet.position.x < enemy.position.x + enemy.width &&
+          bullet.position.x + bullet.width > enemy.position.x &&
+          bullet.position.y < enemy.position.y + enemy.height &&
+          bullet.position.y + bullet.height > enemy.position.y
+        ) {
+          // Bullet hits the enemy - remove the bullet
+          this.bullets.splice(bulletIndex, 1);
+
+          // Handle the impact on the enemy (e.g., decrease enemy health)
+          enemy.hitByBullet(); // You need to implement this method in your Enemy class
+        }
       }
     });
+  }
+  hitEnemy(enemy) {
+    this.enemiesHit.add(enemy.id);
+    if (this.enemiesHit.size >= 5) 
+    {
+      this.isDead = true;
+    }
   }
 }
