@@ -2,6 +2,8 @@ import Player from "./player.js";
 import Platform from "./platform.js";
 import Enemy from "./enemy.js";
 
+let gameStarted=false;
+
 document
   .querySelector(".landing-page .button1")
   .addEventListener("click", () => {
@@ -12,6 +14,8 @@ document
     var b = document.querySelector("body");
     b.style.backgroundImage = "url(./assets/contraMainBackground.jpg)";
     b.style.backgroundColor = "black";
+
+    gameStarted=true;
   });
 
 // const enemies = [];
@@ -67,8 +71,9 @@ backgroundImage.onload = () => {
 };
 
 function startGame() {
-  animationPlayer();
-  gameLoop();
+    animationPlayer();
+    gameLoop();
+ 
 }
 const enemies = [];
 function createEnemy() {
@@ -77,25 +82,63 @@ function createEnemy() {
   const enemy = new Enemy(x, y, 100, 100);
   enemies.push(enemy);
 }
-
 function gameLoop() {
+  if (gameStarted) { // Check if the game has started
+    for (let i = 0; i < enemies.length; i++) {
+      enemies[i].update(ctx);
 
-  for (let i = 0; i < enemies.length; i++) {
-    enemies[i].update(ctx);
-    if (enemies[i].position.x + enemies[i].width < 0) 
-    {
-      enemies.splice(i, 1);
+      if (
+        player.position.x < enemies[i].position.x + enemies[i].width &&
+        player.position.x + player.width > enemies[i].position.x &&
+        player.position.y < enemies[i].position.y + enemies[i].height &&
+        player.position.y + player.height > enemies[i].position.y
+      ) {
+        player.hitEnemy(enemies[i]);
+        if (player.isDead) {
+          showGameOver();
+          return;
+        }
+      }
+
+      if (enemies[i].position.x + enemies[i].width < 0) {
+        enemies.splice(i, 1);
+      }
     }
+    
+    // Check for bullet-enemy collisions and remove them
 
+    for (let i = 0; i < player.bullets.length; i++) {
+      const bullet = player.bullets[i];
+
+      for (let j = 0; j < enemies.length; j++) {
+        const enemy = enemies[j];
+
+        if (
+          bullet.position.x < enemy.position.x + enemy.width &&
+          bullet.position.x + bullet.width > enemy.position.x &&
+          bullet.position.y < enemy.position.y + enemy.height &&
+          bullet.position.y + bullet.height > enemy.position.y
+        ) {
+          player.bullets.splice(i, 1);
+          enemies.splice(j, 1);
+          i--;
+          break;
+        }
+      }
+    }
   }
+
   for (let i = 0; i < enemies.length; i++) {
     enemies[i].changeImage();
   }
+
   if (Math.random() < 0.02) {
-    createEnemy();
+    createEnemy(); // Generate new enemies periodically
   }
+
   requestAnimationFrame(gameLoop);
 }
+
 
 const gravity = 0.7;
 const platforms = [
@@ -470,7 +513,15 @@ function animationPlayer() {
 
   player.update(ctx);
 
-  player.updateBullets();
+  player.updateBullets(enemies);
+  for (let i = 0; i < enemies.length; i++) {
+    enemies[i].update(ctx);
+
+    if (enemies[i].isDefeated()) {
+      enemies.splice(i, 1);
+      i--;
+    }
+  }
   if (player.position.x >= last +800) {
     showGameOver();
     return; 
@@ -478,7 +529,6 @@ function animationPlayer() {
 
   platforms.forEach((platform) => {
     platform.draw(ctx);
-    // platform.updateEnemies(ctx);
   });
 
   platforms.forEach((platform) => {
@@ -532,7 +582,7 @@ document.addEventListener("keydown", (event) => {
     case "ArrowLeft":
       console.log("left");
       if (player.position.x > 50) {
-        player.velocity.x -= 2;
+        player.velocity.x = -2;
       } else {
         player.velocity.x = 0;
       }
@@ -552,7 +602,7 @@ document.addEventListener("keydown", (event) => {
       if (!isJumping) { 
         console.log("top");
         isJumping = true;
-        player.velocity.y -= 15;
+        player.velocity.y -= 2;
         player.currentIndex = 6;
       }
       break;
@@ -663,3 +713,4 @@ function collisionPlatform(
     return false;
   }
 }
+

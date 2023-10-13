@@ -1,10 +1,15 @@
 const gravity = 1.2;
+function generateUniqueID() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
 export default class Enemy {
   constructor(x, y, width, height) {
+    this.id = generateUniqueID();
     this.position = {
       x: x,
       y: y,
     };
+    this.health = 100;
     this.width = width;
     this.height = height;
     this.speed = 6;
@@ -21,8 +26,12 @@ export default class Enemy {
   }
 
   changeImage() {
-    this.currentIndex = (this.currentIndex + 1) % 2;
-    this.img.src = this.EnemyImg[this.currentIndex];
+    this.frameCount++;
+
+    if (this.frameCount % 10 === 0) {
+      this.currentIndex = (this.currentIndex + 1) % 2;
+      this.img.src = this.EnemyImg[this.currentIndex];
+    }
   }
   
       changeImage() {
@@ -48,5 +57,16 @@ export default class Enemy {
           this.draw(ctx);
           this.position.x -= this.speed;
         }
+      }
+      hitByBullet() {
+        this.health -= 100; 
+    
+        if (this.health <= 0) {
+          this.defeated = true;
+        }
+      }
+    
+      isDefeated() {
+        return this.defeated;
       }
 }
