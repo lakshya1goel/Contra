@@ -49,7 +49,28 @@ export default class Player {
         "./assets/PR/down.png",
       ];
   
-  
+      this.currentIndexLeft = 0;
+      this.playerImgLeft = [
+        "./assets/PL/player.png",
+        "./assets/PL/player1.png",
+        "./assets/PL/player2.png",
+        "./assets/PL/player3.png",
+        "./assets/PL/player4.png",
+        "./assets/PL/player5.png",
+        "./assets/PL/jump1.png",
+        "./assets/PL/jump2.png",
+        "./assets/PL/jump3.png",
+        "./assets/PL/jump4.png",
+        "./assets/PL/death1.png",
+        "./assets/PL/death2.png",
+        "./assets/PL/death3.png",
+        "./assets/PL/shooting1.png",
+        "./assets/PL/shooting2.png",
+        "./assets/PL/shooting3.png",
+        "./assets/PL/up.png",
+        "./assets/PL/down.png",
+      ];
+
       this.img = new Image();
       this.img.src = this.playerImg[this.currentIndex];
       // if (this.position.y + this.height + this.velocity.y >= canvas.height) {
@@ -64,6 +85,15 @@ export default class Player {
         this.img.src = this.playerImg[this.currentIndex%6];
       }
       this.currentIndex = (this.currentIndex + 1) ;
+      
+    }
+
+    changeImageLeft() {
+      if(this.currentIndexLeft%10==0)
+      {
+        this.img.src = this.playerImgLeft[this.currentIndexLeft%6];
+      }
+      this.currentIndexLeft = (this.currentIndexLeft + 1) ;
       
     }
   
