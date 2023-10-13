@@ -1,5 +1,6 @@
 import Player from "./player.js";
 import Platform from "./platform.js";
+import Enemy from "./enemy.js";
 
 document.querySelector(".landing-page .button1").addEventListener("click", () => {
   document.getElementById("canvas").style.display = "block";
@@ -10,6 +11,17 @@ document.querySelector(".landing-page .button1").addEventListener("click", () =>
   b.style.backgroundImage = "url(./assets/contraMainBackground.jpg)";
   b.style.backgroundColor = "black";
 });
+
+
+// const enemies = [];
+
+// function createEnemy() {
+//   const x = canvas.width; 
+//   const y = Math.random() * (canvas.height - enemyHeight);
+//   const enemy = new Enemy(x, y, 100, 100);
+//   enemies.push(enemy);
+// }
+// createEnemy();
 
 function showGameOver() {
   const gameOverDiv = document.querySelector(".gameOver");
@@ -60,78 +72,78 @@ function startGame() {
 const gravity = 0.7;
 
 const platforms = [
-  new Platform(canvas.width * 0.08,canvas.height*0.5,2420, canvas.height * 0.1),
+  new Platform(canvas.width * 0.08,canvas.height*0.5,2420, canvas.height * 0.1,0),
 
-  new Platform(canvas.width * 0.07,canvas.height*0.98,5800, canvas.height * 0.1),
+  new Platform(canvas.width * 0.07,canvas.height*0.98,5800, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 0.42,canvas.height*0.65,350, canvas.height * 0.1),
+  new Platform(canvas.width * 0.42,canvas.height*0.65,350, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 0.68,canvas.height*0.8,120, canvas.height * 0.1),
-  new Platform(canvas.width * 0.78,canvas.height*0.95,200, canvas.height * 0.1),
+  new Platform(canvas.width * 0.68,canvas.height*0.8,120, canvas.height * 0.1,1),
+  new Platform(canvas.width * 0.78,canvas.height*0.95,200, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 0.94,canvas.height*0.8,120, canvas.height * 0.1),
+  new Platform(canvas.width * 0.94,canvas.height*0.8,120, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 1.1,canvas.height*0.65,230, canvas.height * 0.1),
+  new Platform(canvas.width * 1.1,canvas.height*0.65,230, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 1.54,canvas.height*0.95,200, canvas.height * 0.1),
+  new Platform(canvas.width * 1.54,canvas.height*0.95,200, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 1.63,canvas.height*0.7,300, canvas.height * 0.1),
+  new Platform(canvas.width * 1.63,canvas.height*0.7,300, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 2.3,canvas.height*0.5,560, canvas.height * 0.1),
-  new Platform(canvas.width * 3.07,canvas.height*0.5,910, canvas.height * 0.1),
+  new Platform(canvas.width * 2.3,canvas.height*0.5,560, canvas.height * 0.1,1),
+  new Platform(canvas.width * 3.07,canvas.height*0.5,910, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 3.58,canvas.height*0.35,1750, canvas.height * 0.1),
+  new Platform(canvas.width * 3.58,canvas.height*0.35,1750, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 3.65,canvas.height*0.95,340, canvas.height * 0.1),
+  new Platform(canvas.width * 3.65,canvas.height*0.95,340, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 3.898,canvas.height*0.75,230, canvas.height * 0.1),
+  new Platform(canvas.width * 3.898,canvas.height*0.75,230, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 4.14,canvas.height*0.65,780, canvas.height * 0.1),
+  new Platform(canvas.width * 4.14,canvas.height*0.65,780, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 4.5,canvas.height*0.95,720, canvas.height * 0.1,0),
+  new Platform(canvas.width * 4.5,canvas.height*0.95,720, canvas.height * 0.1,0,1),
 
-  new Platform(canvas.width * 4.84,canvas.height*0.5,780, canvas.height * 0.1),
+  new Platform(canvas.width * 4.84,canvas.height*0.5,780, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 5.,canvas.height*0.8,220, canvas.height * 0.1),
-  new Platform(canvas.width * 5.27,canvas.height*0.8,220, canvas.height * 0.1),
+  new Platform(canvas.width * 5.,canvas.height*0.8,220, canvas.height * 0.1,1),
+  new Platform(canvas.width * 5.27,canvas.height*0.8,220, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 5.35,canvas.height*0.35,550, canvas.height * 0.1),
+  new Platform(canvas.width * 5.35,canvas.height*0.35,550, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 5.52,canvas.height*0.75,110, canvas.height * 0.1),
+  new Platform(canvas.width * 5.52,canvas.height*0.75,110, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 5.7,canvas.height*0.66,320, canvas.height * 0.1),
+  new Platform(canvas.width * 5.7,canvas.height*0.66,320, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 5.86,canvas.height*0.5,210, canvas.height * 0.1),
+  new Platform(canvas.width * 5.86,canvas.height*0.5,210, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.1,canvas.height*0.66,230, canvas.height * 0.1),
+  new Platform(canvas.width * 6.1,canvas.height*0.66,230, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.2,canvas.height*0.76,300, canvas.height * 0.1),
+  new Platform(canvas.width * 6.2,canvas.height*0.76,300, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.46,canvas.height*0.52,200, canvas.height * 0.1),
+  new Platform(canvas.width * 6.46,canvas.height*0.52,200, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.54,canvas.height*0.35,210, canvas.height * 0.1),
+  new Platform(canvas.width * 6.54,canvas.height*0.35,210, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.79,canvas.height*0.52,200, canvas.height * 0.1),
+  new Platform(canvas.width * 6.79,canvas.height*0.52,200, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 6.85,canvas.height*0.6,570, canvas.height * 0.1),
+  new Platform(canvas.width * 6.85,canvas.height*0.6,570, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.12,canvas.height*0.95,325, canvas.height * 0.1),
+  new Platform(canvas.width * 7.12,canvas.height*0.95,325, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.46,canvas.height*0.8,230, canvas.height * 0.1),
+  new Platform(canvas.width * 7.46,canvas.height*0.8,230, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.71,canvas.height*0.66,230, canvas.height * 0.1),
+  new Platform(canvas.width * 7.71,canvas.height*0.66,230, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.84,canvas.height*0.95,880, canvas.height * 0.1),
+  new Platform(canvas.width * 7.84,canvas.height*0.95,880, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.98,canvas.height*0.75,420, canvas.height * 0.1),
+  new Platform(canvas.width * 7.98,canvas.height*0.75,420, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
+  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 8.3,canvas.height*0.6,130, canvas.height * 0.1),
+  new Platform(canvas.width * 8.3,canvas.height*0.6,130, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
+  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1,1),
 
-  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1),
+  new Platform(canvas.width * 7.88,canvas.height*0.52,560, canvas.height * 0.1,1),
 
 ];
 class Bridge {
@@ -240,12 +252,12 @@ document.addEventListener("keydown", (event) => {
     case "ArrowRight":
       console.log("right");
       if (player.position.x <= 500) {
-        player.velocity.x += 2;
+        player.velocity.x = 2;
       } else {
         player.velocity.x = 0;
         platforms.forEach((platform) => {
           platform.position.x -= speed;
-          platform.PlatformX-=speed+2;
+          platform.enemyX-=speed+2;
         });
         last-=speed;
         imageX += speed;
