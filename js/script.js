@@ -54,6 +54,7 @@ document
 // createEnemy();
 
 function showGameOver() {
+  document.getElementById("canvas").style.display = "none";
   const gameOverDiv = document.querySelector(".gameOver");
   document.body.style.backgroundImage = "none";
   document.body.style.backgroundColor = "black";
